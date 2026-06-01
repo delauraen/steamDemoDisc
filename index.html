@@ -41,90 +41,101 @@
   .page-wrap {
     position: relative; z-index: 1;
     min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 52px 20px 72px;
+    display: flex; flex-direction: column; align-items: center;
+    padding: 48px 20px 72px;
   }
 
   /* ── Header ── */
-  .site-header { text-align: center; margin-bottom: 48px; }
-
-  .disc-ring {
-    width: 68px; height: 68px;
-    margin: 0 auto 18px;
-  }
-  .disc-ring svg {
-    width: 100%; height: 100%;
-    animation: slowspin 10s linear infinite;
-    animation-play-state: paused;
-  }
-  .disc-ring svg.spinning { animation-play-state: running; }
-  @keyframes slowspin { to { transform: rotate(360deg); } }
+  .site-header { text-align: center; margin-bottom: 44px; }
 
   .site-name {
     font-family: 'Bebas Neue', sans-serif;
     font-size: clamp(52px, 12vw, 84px);
-    letter-spacing: 6px;
-    color: var(--cream);
-    line-height: 1;
+    letter-spacing: 6px; color: var(--cream); line-height: 1;
     display: inline-block;
   }
   .site-name::after {
     content: '';
-    display: block;
-    height: 2px;
+    display: block; height: 2px;
     background: linear-gradient(90deg, transparent, var(--gold), transparent);
     margin-top: 6px;
   }
-
   .site-sub {
-    font-size: 11px;
-    letter-spacing: 4px;
-    color: var(--muted);
-    text-transform: uppercase;
-    margin-top: 10px;
+    font-size: 11px; letter-spacing: 4px;
+    color: var(--muted); text-transform: uppercase; margin-top: 10px;
   }
 
-  /* ── Main ── */
-  .main { width: 100%; max-width: 520px; }
+  /* ── Wheel section ── */
+  .wheel-section {
+    display: flex; flex-direction: column; align-items: center;
+    margin-bottom: 40px;
+  }
 
-  /* ── Spin button ── */
+  .wheel-pointer {
+    width: 0; height: 0;
+    border-left: 9px solid transparent;
+    border-right: 9px solid transparent;
+    border-top: 20px solid var(--gold);
+    margin-bottom: 6px;
+    filter: drop-shadow(0 2px 10px rgba(200,146,42,0.7));
+    flex-shrink: 0;
+  }
+
+  .wheel-wrap {
+    cursor: pointer;
+    border-radius: 50%;
+    will-change: transform;
+    /* ease-out: starts fast, decelerates to a stop */
+    transition: transform 5s cubic-bezier(0, 0, 0.2, 1);
+    box-shadow:
+      0 0 0 1px rgba(200,146,42,0.25),
+      0 8px 40px rgba(0,0,0,0.7);
+    position: relative;
+  }
+  .wheel-wrap:hover {
+    box-shadow:
+      0 0 0 1px rgba(200,146,42,0.55),
+      0 8px 40px rgba(0,0,0,0.7);
+  }
+  .wheel-wrap.no-transition { transition: none; }
+
+  #wheelCanvas {
+    display: block;
+    width: 280px; height: 280px;
+    border-radius: 50%;
+  }
+
   .spin-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 14px;
-    width: 100%;
-    padding: 18px 32px;
+    margin-top: 20px;
+    display: flex; align-items: center; justify-content: center; gap: 12px;
+    width: 280px;
+    padding: 16px 28px;
     background: transparent;
     border: 1px solid var(--gold-dk);
     color: var(--gold-lt);
     font-family: 'Bebas Neue', sans-serif;
-    font-size: 22px;
-    letter-spacing: 4px;
+    font-size: 20px; letter-spacing: 4px;
     cursor: pointer;
-    position: relative;
-    overflow: hidden;
+    position: relative; overflow: hidden;
     transition: border-color 0.2s, color 0.2s;
-    margin-bottom: 28px;
   }
   .spin-btn::before {
     content: '';
     position: absolute; inset: 0;
     background: var(--gold-dk);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.25s ease;
-    z-index: 0;
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.25s ease; z-index: 0;
   }
   .spin-btn:hover::before { transform: scaleX(1); }
   .spin-btn:hover { color: #0e0c0a; border-color: var(--gold); }
   .spin-btn > * { position: relative; z-index: 1; }
-  .spin-btn:disabled { opacity: 0.35; cursor: not-allowed; pointer-events: none; }
+  .spin-btn:disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
+
+  /* ── Main content ── */
+  .main { width: 100%; max-width: 520px; }
 
   /* ── Loading ── */
-  .loading { display: none; text-align: center; padding: 44px 0; color: var(--muted); }
+  .loading { display: none; text-align: center; padding: 28px 0; color: var(--muted); }
   .loading.visible { display: block; }
   .loading-label { font-size: 11px; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 16px; }
   .loading-track { width: 160px; height: 1px; background: var(--border); margin: 0 auto; overflow: hidden; }
@@ -140,12 +151,9 @@
     display: none;
     background: rgba(192,57,43,0.07);
     border: 1px solid rgba(192,57,43,0.28);
-    color: #df7060;
-    font-size: 13px;
-    padding: 14px 18px;
-    text-align: center;
-    letter-spacing: 0.5px;
-    line-height: 1.5;
+    color: #df7060; font-size: 13px;
+    padding: 14px 18px; text-align: center;
+    letter-spacing: 0.5px; line-height: 1.6;
     margin-bottom: 20px;
   }
   .error-msg.visible { display: block; }
@@ -155,17 +163,14 @@
     display: none;
     background: var(--surface);
     border: 1px solid var(--border);
-    position: relative;
-    overflow: hidden;
-    animation: fadeup 0.35s ease both;
+    position: relative; overflow: hidden;
+    animation: fadeup 0.4s ease both;
   }
   .game-card.visible { display: block; }
-
   @keyframes fadeup {
-    from { opacity: 0; transform: translateY(10px); }
+    from { opacity: 0; transform: translateY(12px); }
     to   { opacity: 1; transform: translateY(0); }
   }
-
   .game-card::before, .game-card::after {
     content: ''; position: absolute;
     width: 16px; height: 16px; z-index: 2;
@@ -174,136 +179,57 @@
   .game-card::after  { bottom: 0; right: 0; border-bottom: 1px solid var(--gold-dk); border-right: 1px solid var(--gold-dk); }
 
   .card-img-wrap {
-    position: relative;
-    width: 100%;
+    position: relative; width: 100%;
     aspect-ratio: 460 / 215;
-    background: #111;
-    overflow: hidden;
+    background: #111; overflow: hidden;
   }
-
-  .card-img {
-    width: 100%; height: 100%;
-    object-fit: cover;
-    display: block;
-    opacity: 0;
-    transition: opacity 0.4s;
-  }
+  .card-img { width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0; transition: opacity 0.4s; }
   .card-img.loaded { opacity: 1; }
-
-  .card-img-placeholder {
-    position: absolute; inset: 0;
-    display: flex; align-items: center; justify-content: center;
-  }
-
+  .card-img-placeholder { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
   .card-img-wrap::after {
-    content: '';
-    position: absolute; inset: 0;
+    content: ''; position: absolute; inset: 0;
     background: linear-gradient(to bottom, transparent 45%, rgba(24,20,17,0.9) 100%);
     pointer-events: none; z-index: 1;
   }
-
-  .card-tags {
-    position: absolute; bottom: 10px; left: 14px;
-    display: flex; flex-wrap: wrap; gap: 5px;
-    z-index: 2;
-  }
-  .tag {
-    background: rgba(14,12,10,0.78);
-    border: 1px solid var(--border-hi);
-    color: var(--muted);
-    font-size: 10px; letter-spacing: 1.5px;
-    text-transform: uppercase;
-    padding: 3px 8px;
-    backdrop-filter: blur(4px);
-  }
-  .tag-free {
-    background: rgba(200,146,42,0.12);
-    border-color: var(--gold-dk);
-    color: var(--gold-lt);
-  }
+  .card-tags { position: absolute; bottom: 10px; left: 14px; display: flex; flex-wrap: wrap; gap: 5px; z-index: 2; }
+  .tag { background: rgba(14,12,10,0.78); border: 1px solid var(--border-hi); color: var(--muted); font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; padding: 3px 8px; backdrop-filter: blur(4px); }
+  .tag-free { background: rgba(200,146,42,0.12); border-color: var(--gold-dk); color: var(--gold-lt); }
 
   .card-body { padding: 22px 24px 24px; }
-
-  .card-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 32px; letter-spacing: 2px;
-    color: var(--cream); line-height: 1.1;
-    margin-bottom: 4px;
-  }
-  .card-dev {
-    font-size: 11px; letter-spacing: 2px;
-    text-transform: uppercase; color: var(--gold);
-    margin-bottom: 14px;
-  }
-  .card-desc {
-    font-size: 14px; line-height: 1.75;
-    color: #b8ad9e; margin-bottom: 20px;
-    border-left: 2px solid var(--gold-dk);
-    padding-left: 14px;
-  }
-
-  .card-meta {
-    display: flex; gap: 20px; flex-wrap: wrap;
-    padding: 14px 0;
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 20px;
-  }
+  .card-title { font-family: 'Bebas Neue', sans-serif; font-size: 32px; letter-spacing: 2px; color: var(--cream); line-height: 1.1; margin-bottom: 4px; }
+  .card-dev { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; }
+  .card-desc { font-size: 14px; line-height: 1.75; color: #b8ad9e; margin-bottom: 20px; border-left: 2px solid var(--gold-dk); padding-left: 14px; }
+  .card-meta { display: flex; gap: 20px; flex-wrap: wrap; padding: 14px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); margin-bottom: 20px; }
   .meta-item { display: flex; flex-direction: column; gap: 3px; }
   .meta-lbl { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
   .meta-val { font-size: 13px; color: var(--cream); font-weight: 400; }
 
   .card-actions { display: flex; gap: 10px; }
-
   .btn-play {
-    flex: 1;
-    display: flex; align-items: center; justify-content: center; gap: 10px;
-    padding: 13px 20px;
-    background: var(--gold-dk);
-    border: 1px solid var(--gold-dk);
-    color: var(--cream);
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 16px; letter-spacing: 3px;
-    text-decoration: none;
-    transition: background 0.15s, border-color 0.15s, color 0.15s;
-    cursor: pointer;
+    flex: 1; display: flex; align-items: center; justify-content: center; gap: 10px;
+    padding: 13px 20px; background: var(--gold-dk); border: 1px solid var(--gold-dk);
+    color: var(--cream); font-family: 'Bebas Neue', sans-serif; font-size: 16px; letter-spacing: 3px;
+    text-decoration: none; transition: background 0.15s, border-color 0.15s, color 0.15s;
   }
   .btn-play:hover { background: var(--gold); border-color: var(--gold); color: var(--bg); }
-
   .btn-next {
-    padding: 13px 20px;
-    background: transparent;
-    border: 1px solid var(--border-hi);
-    color: var(--muted);
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 16px; letter-spacing: 3px;
-    cursor: pointer;
-    transition: border-color 0.15s, color 0.15s;
-    white-space: nowrap;
+    padding: 13px 20px; background: transparent; border: 1px solid var(--border-hi);
+    color: var(--muted); font-family: 'Bebas Neue', sans-serif; font-size: 16px; letter-spacing: 3px;
+    cursor: pointer; transition: border-color 0.15s, color 0.15s; white-space: nowrap;
   }
   .btn-next:hover { border-color: var(--gold-dk); color: var(--gold-lt); }
   .btn-next:disabled { opacity: 0.3; cursor: not-allowed; }
 
-  .steam-note {
-    display: none;
-    margin-top: 10px;
-    font-size: 11px;
-    color: var(--muted);
-    text-align: center;
-    letter-spacing: 0.5px;
-  }
+  .steam-note { display: none; margin-top: 10px; font-size: 11px; color: var(--muted); text-align: center; letter-spacing: 0.5px; }
   .steam-note.visible { display: block; }
   .steam-note a { color: var(--gold); text-decoration: none; }
   .steam-note a:hover { text-decoration: underline; }
 
-  .footer {
-    margin-top: 52px;
-    font-size: 11px; color: var(--border-hi);
-    letter-spacing: 2px; text-transform: uppercase;
-    text-align: center;
-  }
+  .footer { margin-top: 52px; font-size: 11px; color: var(--border-hi); letter-spacing: 2px; text-transform: uppercase; text-align: center; }
 
-  @media (max-width: 400px) {
+  @media (max-width: 360px) {
+    #wheelCanvas { width: 230px; height: 230px; }
+    .spin-btn { width: 230px; }
     .card-actions { flex-direction: column; }
   }
 </style>
@@ -312,31 +238,25 @@
 <div class="page-wrap">
 
   <header class="site-header">
-    <div class="disc-ring">
-      <svg id="discSvg" viewBox="0 0 68 68" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="34" cy="34" r="32" stroke="#3d3530" stroke-width="1"/>
-        <circle cx="34" cy="34" r="24" stroke="#2a2420" stroke-width="0.5"/>
-        <circle cx="34" cy="34" r="15" stroke="#2a2420" stroke-width="0.5"/>
-        <path d="M34 2 A32 32 0 0 1 64 50" stroke="#c8922a" stroke-width="1.5" stroke-linecap="round"/>
-        <path d="M34 2 A32 32 0 0 0 4 50" stroke="#8a5f14" stroke-width="1" stroke-linecap="round"/>
-        <circle cx="34" cy="34" r="5" fill="#0e0c0a" stroke="#c8922a" stroke-width="1"/>
-        <circle cx="34" cy="34" r="2" fill="#c8922a"/>
-      </svg>
-    </div>
     <div class="site-name">Demo Disc</div>
     <p class="site-sub">A random Steam demo, every spin</p>
   </header>
 
-  <div class="main">
-
-    <div class="error-msg" id="errorMsg"></div>
-
-    <button class="spin-btn" id="spinBtn" onclick="getRandomDemo()">
-      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
-        <path d="M9 1v4M9 13v4M1 9h4M13 9h4M3.2 3.2l2.8 2.8M12 12l2.8 2.8M3.2 14.8l2.8-2.8M12 6l2.8-2.8"/>
+  <section class="wheel-section">
+    <div class="wheel-pointer"></div>
+    <div class="wheel-wrap" id="wheelWrap" onclick="spin()" role="button" aria-label="Spin to get a random demo">
+      <canvas id="wheelCanvas"></canvas>
+    </div>
+    <button class="spin-btn" id="spinBtn" onclick="spin()">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+        <path d="M8 1v3M8 12v3M1 8h3M12 8h3M2.9 2.9l2.1 2.1M11 11l2.1 2.1M2.9 13.1L5 11M11 5l2.1-2.1"/>
       </svg>
       <span id="spinLabel">Spin the Disc</span>
     </button>
+  </section>
+
+  <div class="main">
+    <div class="error-msg" id="errorMsg"></div>
 
     <div class="loading" id="loading">
       <div class="loading-label">Reading disc&hellip;</div>
@@ -355,7 +275,6 @@
         <img id="gameImg" class="card-img" alt=""/>
         <div class="card-tags" id="cardTags"></div>
       </div>
-
       <div class="card-body">
         <div class="card-title" id="gameTitle">—</div>
         <div class="card-dev"   id="gameDev">—</div>
@@ -366,213 +285,344 @@
             <svg width="13" height="13" viewBox="0 0 13 13" fill="currentColor"><path d="M2 1.5l9 5-9 5v-10z"/></svg>
             Install Demo Free
           </a>
-          <button class="btn-next" id="nextBtn" onclick="getRandomDemo()">Next ›</button>
+          <button class="btn-next" id="nextBtn" onclick="spin()">Next ›</button>
         </div>
         <p class="steam-note" id="steamNote">
-          Button opens Steam. Or <a id="storeLink" href="#" target="_blank" rel="noopener noreferrer">view on Steam store page</a>.
+          Opens Steam app. Or <a id="storeLink" href="#" target="_blank" rel="noopener noreferrer">view on Steam store page</a>.
         </p>
       </div>
     </div>
-
   </div>
 
   <footer class="footer">Demo Disc &mdash; Like a magazine cover disc, but infinite</footer>
 </div>
 
 <script>
-  // ── Demo app ID pool ─────────────────────────────────────────────────────
-  // Real Steam demos covering a wide range of genres.
-  // To add more: find the appID in any Steam URL, e.g.
-  // store.steampowered.com/app/2358720 → appID is 2358720
-  const DEMO_IDS = [
-    2358720,  // Balatro
-    1449850,  // Loop Hero
-    1596590,  // Chained Echoes
-    1659420,  // Signalis
-    1962830,  // Vampire Survivors
-    1782610,  // Nobody Saves the World
-    1850500,  // Citizen Sleeper
-    2046490,  // OlliOlli World
-    1973260,  // Neon White
-    2280430,  // Dave the Diver
-    1920760,  // Stray
-    2172010,  // Planet of Lana
-    1908010,  // Pentiment
-    2153410,  // A Plague Tale: Requiem
-    1913870,  // As Dusk Falls
-    2017680,  // Victoria 3
-    1551360,  // Forager
-    2138710,  // Tinykin
-    1986660,  // Tunic
-    2076640,  // Norco
-    2009760,  // Unpacking
-    2029760,  // Prodeus
-    1962760,  // Dome Keeper
-    1865940,  // Midnight Fight Express
-    1979690,  // Rollerdrome
-    2180000,  // High on Life
-    2039210,  // Evil West
-    2164890,  // The Last Case of Benedict Fox
-    2177820,  // Ghostlore
-    2217680,  // Venba
-    1790600,  // Sable
-    1621690,  // Silt
-    1985810,  // Potionomics
-    1659400,  // Rogue Legacy 2
-    1675250,  // Garden Story
-    1878840,  // Cursed to Golf
-    1891050,  // Behind the Frame
-    2037000,  // Strange Horticulture
-  ];
+// ── CORS Proxies ─────────────────────────────────────────────────────────────
+// Steam's API blocks direct browser requests, so we route through a proxy.
+//
+// ★ STEP 1: Deploy worker.js to Cloudflare Workers (see instructions below).
+// ★ STEP 2: Paste your worker URL into the first line and uncomment it.
+//
+// Your worker URL will look like:
+//   https://demo-disc-proxy.YOUR-USERNAME.workers.dev
+//
+// Once that's set, the free fallback proxies below are just backup.
+const WORKER_URL = ''; // ← paste your Cloudflare Worker URL here
 
-  let lastId = null;
+const PROXIES = [
+  // Cloudflare Worker — fast, reliable, no rate limits (your own free worker)
+  ...(WORKER_URL ? [u => `${WORKER_URL}/?url=${encodeURIComponent(u)}`] : []),
+  // Free fallbacks (less reliable, but work when the worker isn't set up yet)
+  u => `https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`,
+  u => `https://api.allorigins.win/get?url=${encodeURIComponent(u)}`,
+  u => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(u)}`,
+  u => `https://thingproxy.freeboard.io/fetch/${u}`,
+];
 
-  // ── CORS proxies (tried in order if one fails) ───────────────────────────
-  // These are free services that forward requests to Steam on our behalf.
-  const PROXIES = [
-    id => `https://corsproxy.io/?url=${encodeURIComponent(`https://store.steampowered.com/api/appdetails?appids=${id}&cc=us&l=en`)}`,
-    id => `https://api.allorigins.win/get?url=${encodeURIComponent(`https://store.steampowered.com/api/appdetails?appids=${id}&cc=us&l=en`)}`,
-  ];
-
-  async function fetchSteamData(appId) {
-    for (const makeUrl of PROXIES) {
-      try {
-        const res = await fetch(makeUrl(appId), { signal: AbortSignal.timeout(9000) });
-        if (!res.ok) continue;
-
-        const json = await res.json();
-        // allorigins wraps in { contents: "..." }
-        const raw = json.contents ? JSON.parse(json.contents) : json;
-        const d = raw[String(appId)]?.data;
-        if (!d) continue;
-
-        return {
-          name:              d.name,
-          short_description: d.short_description,
-          developers:        d.developers || [],
-          genres:            (d.genres || []).map(g => g.description),
-          release_date:      d.release_date?.date || '—',
-          platforms:         d.platforms || {},
-          header_image:      `https://cdn.akamai.steamstatic.com/steam/apps/${appId}/header.jpg`,
-        };
-      } catch (_) {
-        // try next proxy
-      }
-    }
-
-    // Both proxies failed — image still works, text will be minimal
-    return {
-      name:              null,
-      short_description: 'Visit the Steam page for the full description.',
-      developers:        [],
-      genres:            [],
-      release_date:      '—',
-      platforms:         { windows: true },
-      header_image:      `https://cdn.akamai.steamstatic.com/steam/apps/${appId}/header.jpg`,
-    };
-  }
-
-  // ── Main ─────────────────────────────────────────────────────────────────
-  async function getRandomDemo() {
-    document.getElementById('errorMsg').classList.remove('visible');
-    setLoading(true);
-
-    const pool  = DEMO_IDS.filter(id => id !== lastId);
-    const appId = pool[Math.floor(Math.random() * pool.length)];
-    lastId = appId;
-
+async function fetchViaProxy(url) {
+  let lastErr;
+  for (const wrap of PROXIES) {
+    const ac = new AbortController();
+    const timer = setTimeout(() => ac.abort(), 6000);
     try {
-      const data = await fetchSteamData(appId);
-      renderCard(data, appId);
+      const res = await fetch(wrap(url), { signal: ac.signal });
+      clearTimeout(timer);
+      if (!res.ok) continue;
+      // Use text → parse so we can safely detect the allorigins /get wrapper
+      const text = await res.text();
+      const json = JSON.parse(text);
+      // allorigins /get wraps the response as { contents: "..." } — unwrap it
+      return json.contents ? JSON.parse(json.contents) : json;
     } catch (e) {
-      showError('Something went wrong — give it another spin.');
-      setLoading(false);
+      clearTimeout(timer);
+      lastErr = e;
     }
   }
+  throw lastErr || new Error('All proxies failed');
+}
 
-  // ── Render card ──────────────────────────────────────────────────────────
-  function renderCard(data, appId) {
-    const noData = !data.name;
-    const name   = data.name || `Steam Demo — App ${appId}`;
+// ── Steam API ─────────────────────────────────────────────────────────────────
+const SEARCH_BASE = 'https://store.steampowered.com/search/results/?json=1&demos=1&cc=us&l=en';
+let totalCount = null;
+let lastId = null;
 
-    document.getElementById('gameTitle').textContent = name;
-    document.getElementById('gameDev').textContent   = data.developers[0] || '—';
-    document.getElementById('gameDesc').textContent  = data.short_description || 'A free demo on Steam.';
+async function fetchRandomGameId() {
+  if (!totalCount) {
+    const d = await fetchViaProxy(`${SEARCH_BASE}&count=1&start=0`);
+    // Steam caps the browsable catalogue at ~9750 results
+    totalCount = Math.min(d.total_count || 1000, 9750);
+  }
+  for (let attempt = 0; attempt < 6; attempt++) {
+    const start = Math.floor(Math.random() * totalCount);
+    const d = await fetchViaProxy(`${SEARCH_BASE}&count=1&start=${start}`);
+    const id = d.items?.[0]?.id;
+    if (id && id !== lastId) return id;
+  }
+  throw new Error('Could not pick a unique demo');
+}
 
-    // Genre tags
-    const tagsEl = document.getElementById('cardTags');
-    tagsEl.innerHTML = '<span class="tag tag-free">Free Demo</span>';
-    data.genres.slice(0, 3).forEach(g => {
-      const s = document.createElement('span');
-      s.className = 'tag';
-      s.textContent = g;
-      tagsEl.appendChild(s);
-    });
-
-    // Meta row
-    const p = data.platforms;
-    const platStr = [p.windows && 'Windows', p.mac && 'Mac', p.linux && 'Linux']
-      .filter(Boolean).join(' · ') || 'PC';
-    document.getElementById('cardMeta').innerHTML = `
-      <div class="meta-item">
-        <span class="meta-lbl">Platform</span>
-        <span class="meta-val">${platStr}</span>
-      </div>
-      <div class="meta-item">
-        <span class="meta-lbl">Released</span>
-        <span class="meta-val">${data.release_date}</span>
-      </div>
-      <div class="meta-item">
-        <span class="meta-lbl">Price</span>
-        <span class="meta-val" style="color:var(--gold-lt)">Free</span>
-      </div>`;
-
-    // Image — Steam CDN is always public, no login needed
-    const img = document.getElementById('gameImg');
-    img.classList.remove('loaded');
-    img.style.display = 'block';
-    document.getElementById('imgPlaceholder').style.display = 'flex';
-    img.alt = name;
-    img.onload  = () => {
-      img.classList.add('loaded');
-      document.getElementById('imgPlaceholder').style.display = 'none';
-    };
-    img.onerror = () => {
-      img.style.display = 'none';
-    };
-    img.src = data.header_image;
-
-    // Links
-    document.getElementById('playBtn').href   = `steam://install/${appId}`;
-    document.getElementById('storeLink').href = `https://store.steampowered.com/app/${appId}`;
-    document.getElementById('steamNote').classList.add('visible');
-
-    // Show warning if proxy failed but still show the card
-    if (noData) {
-      showError("Couldn't load details this time, but here's the game! Click the store link below for more info.");
-    } else {
-      document.getElementById('errorMsg').classList.remove('visible');
+async function fetchGameData(appId) {
+  const url = `https://store.steampowered.com/api/appdetails?appids=${appId}&cc=us&l=en`;
+  try {
+    const raw = await fetchViaProxy(url);
+    const d = raw[String(appId)]?.data;
+    if (d) {
+      return {
+        name:      d.name,
+        desc:      d.short_description,
+        devs:      d.developers || [],
+        genres:    (d.genres || []).map(g => g.description),
+        released:  d.release_date?.date || '—',
+        platforms: d.platforms || {},
+        headerImg: `https://cdn.akamai.steamstatic.com/steam/apps/${appId}/header.jpg`,
+        demoAppId: d.demos?.[0]?.appid ?? null,
+      };
     }
+  } catch (_) { /* fall through */ }
+  // Proxy failed but we still know the app ID — show minimal card
+  return {
+    name: null, desc: 'Visit the store page for the full description.',
+    devs: [], genres: [], released: '—',
+    platforms: { windows: true },
+    headerImg: `https://cdn.akamai.steamstatic.com/steam/apps/${appId}/header.jpg`,
+    demoAppId: null,
+  };
+}
 
-    document.getElementById('gameCard').classList.add('visible');
-    document.getElementById('spinLabel').textContent = 'Spin Again';
+// ── Wheel (canvas) ────────────────────────────────────────────────────────────
+let wheelDeg = 0;
+let spinning = false;
+
+function initWheel() {
+  const canvas = document.getElementById('wheelCanvas');
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const size = canvas.getBoundingClientRect().width || 280;
+  canvas.width  = Math.round(size * dpr);
+  canvas.height = Math.round(size * dpr);
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  drawDisc(ctx, size / 2, size / 2, size / 2 - 3);
+}
+
+function drawDisc(ctx, cx, cy, R) {
+  // Outer data area — 16 alternating segments like a CD data track
+  const SEG = 16;
+  const sa = (Math.PI * 2) / SEG;
+  for (let i = 0; i < SEG; i++) {
+    const a0 = i * sa - Math.PI / 2;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, R, a0, a0 + sa);
+    ctx.closePath();
+    ctx.fillStyle = i % 2 ? '#1d1a16' : '#181411';
+    ctx.fill();
+  }
+
+  // Segment dividers — thin gold lines from inner ring outward
+  for (let i = 0; i < SEG; i++) {
+    const a = i * sa - Math.PI / 2;
+    ctx.beginPath();
+    ctx.moveTo(cx + Math.cos(a) * R * 0.38, cy + Math.sin(a) * R * 0.38);
+    ctx.lineTo(cx + Math.cos(a) * R,        cy + Math.sin(a) * R);
+    ctx.strokeStyle = 'rgba(200,146,42,0.09)';
+    ctx.lineWidth = 0.75;
+    ctx.stroke();
+  }
+
+  // Concentric groove rings
+  [
+    [R,        '#c8922a',              2   ],
+    [R * 0.90, 'rgba(200,146,42,0.3)', 0.75],
+    [R * 0.72, 'rgba(200,146,42,0.15)',0.5 ],
+    [R * 0.55, 'rgba(200,146,42,0.2)', 0.5 ],
+    [R * 0.38, 'rgba(200,146,42,0.4)', 1   ],
+  ].forEach(([r, col, lw]) => {
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.strokeStyle = col; ctx.lineWidth = lw; ctx.stroke();
+  });
+
+  // Tick marks around the outer ring
+  for (let i = 0; i < 48; i++) {
+    const a = (i / 48) * Math.PI * 2 - Math.PI / 2;
+    const big = i % 4 === 0;
+    ctx.beginPath();
+    ctx.moveTo(cx + Math.cos(a) * R * (big ? 0.83 : 0.87),
+               cy + Math.sin(a) * R * (big ? 0.83 : 0.87));
+    ctx.lineTo(cx + Math.cos(a) * R * 0.92,
+               cy + Math.sin(a) * R * 0.92);
+    ctx.strokeStyle = big ? 'rgba(200,146,42,0.45)' : 'rgba(200,146,42,0.15)';
+    ctx.lineWidth = big ? 0.75 : 0.4;
+    ctx.stroke();
+  }
+
+  // Inner label fill
+  ctx.beginPath();
+  ctx.arc(cx, cy, R * 0.38, 0, Math.PI * 2);
+  ctx.fillStyle = '#181411';
+  ctx.fill();
+
+  // Small decorative circles inside the label area
+  for (let i = 0; i < 6; i++) {
+    const a = (i / 6) * Math.PI * 2;
+    ctx.beginPath();
+    ctx.arc(cx + Math.cos(a) * R * 0.22, cy + Math.sin(a) * R * 0.22,
+            R * 0.046, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(200,146,42,0.13)';
+    ctx.lineWidth = 0.5;
+    ctx.stroke();
+  }
+
+  // Center hole
+  ctx.beginPath();
+  ctx.arc(cx, cy, R * 0.072, 0, Math.PI * 2);
+  ctx.fillStyle = '#0e0c0a';
+  ctx.fill();
+  ctx.strokeStyle = '#c8922a';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  // Center dot
+  ctx.beginPath();
+  ctx.arc(cx, cy, R * 0.022, 0, Math.PI * 2);
+  ctx.fillStyle = '#c8922a';
+  ctx.fill();
+}
+
+// Returns a promise that resolves after the spin animation finishes.
+function startWheelSpin() {
+  const SPIN_MS = 5000;
+  // 6–10 full rotations so the disc visibly spins many times before landing
+  const rotations = 6 + Math.floor(Math.random() * 5);
+  wheelDeg += rotations * 360 + Math.random() * 360;
+
+  const wrap = document.getElementById('wheelWrap');
+  wrap.style.transform = `rotate(${wheelDeg}deg)`;
+
+  return new Promise(resolve => setTimeout(resolve, SPIN_MS));
+}
+
+// ── Main flow ─────────────────────────────────────────────────────────────────
+async function spin() {
+  if (spinning) return;
+  spinning = true;
+
+  // Reset UI state
+  document.getElementById('errorMsg').classList.remove('visible');
+  document.getElementById('gameCard').classList.remove('visible');
+  document.getElementById('steamNote').classList.remove('visible');
+  setLoading(true);
+
+  // Fire the wheel animation and the Steam API call at the same time.
+  // The card only reveals once BOTH are done — so the wheel always fully
+  // spins out even if the network is fast, and we wait on network if it's slow.
+  const spinDone  = startWheelSpin();
+  const fetchDone = (async () => {
+    const appId = await fetchRandomGameId();
+    lastId = appId;
+    return { appId, gameData: await fetchGameData(appId) };
+  })();
+
+  let result;
+  try {
+    result = await fetchDone;
+  } catch (e) {
+    // Wait for the wheel to finish spinning before showing the error
+    await spinDone;
+    showError('Couldn\'t connect to Steam — give it another spin. Free proxy services can be temporarily unreliable.');
     setLoading(false);
+    spinning = false;
+    return;
   }
 
-  // ── Helpers ───────────────────────────────────────────────────────────────
-  function setLoading(on) {
-    document.getElementById('spinBtn').disabled = on;
-    document.getElementById('nextBtn').disabled = on;
-    document.getElementById('loading').classList.toggle('visible', on);
-    document.getElementById('discSvg').classList.toggle('spinning', on);
-    if (on) document.getElementById('gameCard').classList.remove('visible');
+  await spinDone;
+
+  const { appId, gameData } = result;
+  const demoAppId = gameData.demoAppId ?? appId;
+  renderCard(gameData, demoAppId, appId);
+  setLoading(false);
+  spinning = false;
+}
+
+// ── Render card ───────────────────────────────────────────────────────────────
+function renderCard(data, demoAppId, storeAppId) {
+  const name = data.name || `Steam Demo — App ${storeAppId}`;
+
+  document.getElementById('gameTitle').textContent = name;
+  document.getElementById('gameDev').textContent   = data.devs[0] || '—';
+  document.getElementById('gameDesc').textContent  = data.desc || 'A free demo on Steam.';
+
+  const tagsEl = document.getElementById('cardTags');
+  tagsEl.innerHTML = '<span class="tag tag-free">Free Demo</span>';
+  data.genres.slice(0, 3).forEach(g => {
+    const s = document.createElement('span');
+    s.className = 'tag';
+    s.textContent = g;
+    tagsEl.appendChild(s);
+  });
+
+  const p = data.platforms;
+  const platStr = [p.windows && 'Windows', p.mac && 'Mac', p.linux && 'Linux']
+    .filter(Boolean).join(' · ') || 'PC';
+  document.getElementById('cardMeta').innerHTML = `
+    <div class="meta-item">
+      <span class="meta-lbl">Platform</span>
+      <span class="meta-val">${platStr}</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-lbl">Released</span>
+      <span class="meta-val">${data.released}</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-lbl">Price</span>
+      <span class="meta-val" style="color:var(--gold-lt)">Free</span>
+    </div>`;
+
+  const img = document.getElementById('gameImg');
+  img.classList.remove('loaded');
+  img.style.display = 'block';
+  document.getElementById('imgPlaceholder').style.display = 'flex';
+  img.alt    = name;
+  img.onload  = () => {
+    img.classList.add('loaded');
+    document.getElementById('imgPlaceholder').style.display = 'none';
+  };
+  img.onerror = () => { img.style.display = 'none'; };
+  img.src = data.headerImg;
+
+  document.getElementById('playBtn').href   = `steam://install/${demoAppId}`;
+  document.getElementById('storeLink').href = `https://store.steampowered.com/app/${storeAppId}`;
+  document.getElementById('steamNote').classList.add('visible');
+
+  if (!data.name) {
+    showError('Couldn\'t load details this time — use the store link below for more info.');
   }
 
-  function showError(msg) {
-    const el = document.getElementById('errorMsg');
-    el.textContent = '⚠ ' + msg;
-    el.classList.add('visible');
-  }
+  document.getElementById('gameCard').classList.add('visible');
+  document.getElementById('spinLabel').textContent = 'Spin Again';
+
+  // Scroll the card into view, especially helpful on mobile
+  setTimeout(() => {
+    document.getElementById('gameCard').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }, 100);
+}
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+function setLoading(on) {
+  document.getElementById('spinBtn').disabled = on;
+  document.getElementById('nextBtn').disabled = on;
+  document.getElementById('loading').classList.toggle('visible', on);
+}
+
+function showError(msg) {
+  const el = document.getElementById('errorMsg');
+  el.textContent = msg;
+  el.classList.add('visible');
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+window.addEventListener('load', initWheel);
 </script>
 </body>
 </html>
