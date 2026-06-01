@@ -308,11 +308,11 @@
 //   https://demo-disc-proxy.YOUR-USERNAME.workers.dev
 //
 // Once that's set, the free fallback proxies below are just backup.
-const WORKER_URL = ''; // ← paste your Cloudflare Worker URL here
+const WORKER_URL = 'https://demo-disc-proxy.lrampey.workers.dev/'; // ← paste your Cloudflare Worker URL here
 
 const PROXIES = [
   // Cloudflare Worker — fast, reliable, no rate limits (your own free worker)
-  ...(WORKER_URL ? [u => `${WORKER_URL}/?url=${encodeURIComponent(u)}`] : []),
+  ...(WORKER_URL ? [u => `${WORKER_URL.replace(/\/$/, '')}/?url=${encodeURIComponent(u)}`] : []),
   // Free fallbacks (less reliable, but work when the worker isn't set up yet)
   u => `https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`,
   u => `https://api.allorigins.win/get?url=${encodeURIComponent(u)}`,
